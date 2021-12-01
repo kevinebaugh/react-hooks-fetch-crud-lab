@@ -10,10 +10,27 @@ function QuestionList() {
       .then(data => setQuestions(data))
   }, [])
 
+  function handleDelete(event) {
+    const idToDelete = event.target.id.split("-")[1]
+
+    fetch(`http://localhost:4000/questions/${idToDelete}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(response => response.json())
+      .then( data => {
+        const updatedQuestions = questions.filter((question) => question.id.toString() !== idToDelete)
+        setQuestions(updatedQuestions)
+      })
+  }
+
   const questionItems = questions.map((question) => {
     return <QuestionItem
       key={question.id}
       question={question}
+      handleDelete={handleDelete}
     />
   })
 
